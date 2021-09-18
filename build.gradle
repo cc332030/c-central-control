@@ -1,0 +1,68 @@
+
+buildscript {
+  dependencies {
+    classpath(group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: libs.versions.spring.boot.get())
+  }
+}
+
+plugins {
+  id 'net.researchgate.release' version '2.8.1'
+}
+
+allprojects {
+
+  apply plugin: 'java-library'
+  apply plugin: 'idea'
+  apply plugin: 'org.springframework.boot'
+  apply plugin: 'io.spring.dependency-management'
+
+// configurations.all {
+//   resolutionStrategy.cacheDynamicVersionsFor 1, 'seconds'
+//   resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
+// }
+
+  dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web') {
+      exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jetty'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+    annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
+      exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    implementation libs.commons.lang
+    implementation libs.commons.collections
+    implementation libs.commons.io
+
+    implementation libs.guava
+    implementation libs.okhttp
+
+    implementation group: 'com.c332030', name: 'c-spring-app-web', version: libs.versions.c.commons.spring.get()
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+  }
+
+  apply from: "${rootProject.projectDir}/java.gradle"
+
+}
+
+release {
+  git {
+    requireBranch = 'main'
+    pushToRemote = 'origin'
+    signTag = true
+  }
+}

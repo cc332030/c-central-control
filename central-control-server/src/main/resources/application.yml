@@ -1,0 +1,16 @@
+
+server:
+  port: 8001
+
+spring:
+  application:
+    name: central-control-server
+
+  profiles:
+    active: dev
+    include:
+      - log-file
+
+logging:
+  level:
+    root: info
