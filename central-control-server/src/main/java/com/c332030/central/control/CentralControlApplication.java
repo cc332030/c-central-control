@@ -1,4 +1,4 @@
-package com.c332030.central.control.server;
+package com.c332030.central.control;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,9 +16,9 @@ import com.c332030.constant.PackageConstants;
  */
 @SpringBootApplication(scanBasePackages = PackageConstants.BASE)
 @ConfigurationPropertiesScan(basePackages = PackageConstants.BASE)
-public class CentralControlServerApplication {
+public class CentralControlApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CentralControlServerApplication.class, args);
+        SpringApplication.run(CentralControlApplication.class, args);
     }
 }
