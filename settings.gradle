@@ -1,6 +1,11 @@
 
 rootProject.name = 'central-control'
 
+include 'central-control-constants'
+include 'central-control-entity'
+include 'central-control-model'
+include 'central-control-util'
+
 include 'central-control-client'
 include 'central-control-server'
 
