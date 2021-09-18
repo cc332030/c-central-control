@@ -1,5 +1,10 @@
 package com.c332030.central.control.model.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import com.c332030.central.control.enums.WeChatErrorEnum;
+
 /**
  * <p>
  * Description: CentralControlException
@@ -8,27 +13,24 @@ package com.c332030.central.control.model.exception;
  * @author c332030
  * @version 1.0
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class CentralControlException extends RuntimeException {
 
     private static final long serialVersionUID = 3080806953447739121L;
 
-    public CentralControlException() {
-        super();
+    private final WeChatErrorEnum weChatErrorEnum;
+
+    public CentralControlException(WeChatErrorEnum weChatErrorEnum, String message) {
+        super(message);
+        this.weChatErrorEnum = weChatErrorEnum;
+    }
+
+    public CentralControlException(WeChatErrorEnum weChatErrorEnum) {
+        this(weChatErrorEnum, null);
     }
 
     public CentralControlException(String message) {
-        super(message);
-    }
-
-    public CentralControlException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public CentralControlException(Throwable cause) {
-        super(cause);
-    }
-
-    protected CentralControlException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        this(null, message);
     }
 }

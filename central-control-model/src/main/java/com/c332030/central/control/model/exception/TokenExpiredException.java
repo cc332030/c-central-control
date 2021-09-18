@@ -1,5 +1,7 @@
 package com.c332030.central.control.model.exception;
 
+import com.c332030.central.control.enums.WeChatErrorEnum;
+
 /**
  * <p>
  * Description: TokenExpiredException
@@ -10,4 +12,9 @@ package com.c332030.central.control.model.exception;
  */
 public class TokenExpiredException extends CentralControlException {
     private static final long serialVersionUID = 6659459224712874869L;
+
+    public TokenExpiredException() {
+        super(WeChatErrorEnum.WeChatErrorEnum);
+    }
+
 }
