@@ -1,8 +1,10 @@
 package com.c332030.central.control.enums;
 
 import java.util.Map;
+import java.util.Optional;
 
-import com.c332030.constant.enumerable.IEnum;
+import com.c332030.central.control.enums.base.CCErrorTypeEnum;
+import com.c332030.central.control.enums.base.ICCErrorEnum;
 import com.c332030.util.data.CEnumUtils;
 
 /**
@@ -13,11 +15,12 @@ import com.c332030.util.data.CEnumUtils;
  * @author c332030
  * @version 1.0
  */
-public enum WeChatErrorEnum implements IEnum {
+public enum WeChatErrorEnum implements ICCErrorEnum<Integer> {
 
     BUSY(-1, "系统繁忙"),
     _0("请求成功"),
-    _40001("获取 access_token 时 AppSecret 错误，或者 access_token 无效。请开发者认真比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口"),
+    _40001("获取 access_token 时 AppSecret 错误，或者 access_token 无效。请开发者认真比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口"
+        , CCErrorTypeEnum.TOKEN_EXPIRE),
     _40002("不合法的凭证类型"),
     _40003("不合法的 OpenID ，请开发者确认 OpenID （该用户）是否已关注公众号，或是否是其他公众号的 OpenID"),
     _40004("不合法的媒体文件类型"),
@@ -30,7 +33,8 @@ public enum WeChatErrorEnum implements IEnum {
     _40011("不合法的视频文件大小"),
     _40012("不合法的缩略图文件大小"),
     _40013("不合法的 AppID ，请开发者检查 AppID 的正确性，避免异常字符，注意大小写"),
-    _40014("不合法的 access_token ，请开发者认真比对 access_token 的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口"),
+    _40014("不合法的 access_token ，请开发者认真比对 access_token 的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口"
+        , CCErrorTypeEnum.TOKEN_EXPIRE),
     _40015("不合法的菜单类型"),
     _40016("不合法的按钮个数"),
     _40017("不合法的按钮类型"),
@@ -67,7 +71,7 @@ public enum WeChatErrorEnum implements IEnum {
     _40137("不支持的图片格式"),
     _40155("请勿添加其他公众号的主页链接"),
     _40163("oauth_code已使用"),
-    _41001("缺少 access_token 参数"),
+    _41001("缺少 access_token 参数", CCErrorTypeEnum.TOKEN_EMPTY),
     _41002("缺少 appid 参数"),
     _41003("缺少 refresh_token 参数"),
     _41004("缺少 secret 参数"),
@@ -76,10 +80,12 @@ public enum WeChatErrorEnum implements IEnum {
     _41007("缺少子菜单数据"),
     _41008("缺少 oauth code"),
     _41009("缺少 openid"),
-    _42001("access_token 超时，请检查 access_token 的有效期，请参考基础支持 - 获取 access_token 中，对 access_token 的详细机制说明"),
+    _42001("access_token 超时，请检查 access_token 的有效期，请参考基础支持 - 获取 access_token 中，对 access_token 的详细机制说明"
+        , CCErrorTypeEnum.TOKEN_EXPIRE),
     _42002("refresh_token 超时"),
     _42003("oauth_code 超时"),
-    _42007("用户修改微信密码， accesstoken 和 refreshtoken 失效，需要重新授权"),
+    _42007("用户修改微信密码， accesstoken 和 refreshtoken 失效，需要重新授权"
+        , CCErrorTypeEnum.TOKEN_EXPIRE),
     _43001("需要 GET 请求"),
     _43002("需要 POST 请求"),
     _43003("需要 HTTPS 请求"),
@@ -185,21 +191,34 @@ public enum WeChatErrorEnum implements IEnum {
     /**
      * 代码
      */
-    private final int code;
+    private final Integer code;
 
     /**
      * 描述
      */
     private final String text;
 
-    WeChatErrorEnum(int code, String text) {
-        this.code = code;
+    /**
+     * 描述
+     */
+    private final CCErrorTypeEnum errorTypeEnum;
+
+    WeChatErrorEnum(Integer code, String text, CCErrorTypeEnum errorTypeEnum) {
+        this.code = Optional.ofNullable(code).orElseGet(() -> Integer.parseInt(name().substring(1)));
         this.text = text;
+        this.errorTypeEnum = errorTypeEnum;
+    }
+
+    WeChatErrorEnum(Integer code, String text) {
+        this(code, text, null);
+    }
+
+    WeChatErrorEnum(String text, CCErrorTypeEnum errorTypeEnum) {
+        this(null, text, errorTypeEnum);
     }
 
     WeChatErrorEnum(String text) {
-        this.code = Integer.parseInt(name().substring(1));
-        this.text = text;
+        this(text, null);
     }
 
     public static final Map<Integer, WeChatErrorEnum> CODE_MAP =
@@ -209,7 +228,8 @@ public enum WeChatErrorEnum implements IEnum {
         return CEnumUtils.mapGet(CODE_MAP, code);
     }
 
-    public int getCode() {
+    @Override
+    public Integer getCode() {
         return code;
     }
 
@@ -217,4 +237,10 @@ public enum WeChatErrorEnum implements IEnum {
     public String getText() {
         return text;
     }
+
+    @Override
+    public CCErrorTypeEnum getType() {
+        return errorTypeEnum;
+    }
+
 }

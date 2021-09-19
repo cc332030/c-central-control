@@ -2,11 +2,9 @@ package com.c332030.central.control;
 
 import java.util.function.Consumer;
 
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
-import com.c332030.central.control.model.exception.TokenExpiredException;
+import com.c332030.central.control.model.exception.CentralControlException;
 
 /**
  * <p>
@@ -17,7 +15,6 @@ import com.c332030.central.control.model.exception.TokenExpiredException;
  * @version 1.0
  */
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CentralControlClient {
 
     private boolean retryOnTokenExpired;
@@ -33,9 +30,14 @@ public class CentralControlClient {
 
                 tokenConsumer.accept("");
                 break;
-            } catch (TokenExpiredException e) {
-                if(!retryOnTokenExpired || ++retryTimes >= this.retryTimes) {
-                    throw e;
+            } catch (CentralControlException e) {
+
+                switch (e.getErrorEnum().getType()) {
+                    case TOKEN_EXPIRE:
+                        if(!retryOnTokenExpired || ++retryTimes >= this.retryTimes) {
+                            throw e;
+                        }
+                        break;
                 }
             }
         }

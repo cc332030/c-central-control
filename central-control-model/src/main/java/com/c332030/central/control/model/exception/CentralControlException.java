@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import com.c332030.central.control.enums.WeChatErrorEnum;
+import com.c332030.central.control.enums.base.ICCErrorEnum;
 
 /**
  * <p>
@@ -19,11 +20,11 @@ public class CentralControlException extends RuntimeException {
 
     private static final long serialVersionUID = 3080806953447739121L;
 
-    private final WeChatErrorEnum weChatErrorEnum;
+    private final ICCErrorEnum<?> errorEnum;
 
-    public CentralControlException(WeChatErrorEnum weChatErrorEnum, String message) {
+    public CentralControlException(ICCErrorEnum<?> errorEnum, String message) {
         super(message);
-        this.weChatErrorEnum = weChatErrorEnum;
+        this.errorEnum = errorEnum;
     }
 
     public CentralControlException(WeChatErrorEnum weChatErrorEnum) {
