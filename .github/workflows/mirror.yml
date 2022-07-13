@@ -1,16 +1,10 @@
 
 name: mirror
 
-on: push
+on: [push, pull_request]
 
 jobs:
   mirror:
-    runs-on: ubuntu-latest
-    steps:
-      - name: init ssh
-        run: ${{ secrets.INIT_SSH }}
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: mirror
-        run: ${{ secrets.MIRROR_GITHUB }}
-        timeout-minutes: 2
+    uses: cc332030/git-mirror-action/.github/workflows/mirror.yml@main
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
